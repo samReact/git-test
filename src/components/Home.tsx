@@ -1,45 +1,79 @@
-import { useQuery } from '@tanstack/react-query';
-import { Grid, GridColumn } from '@progress/kendo-react-grid';
+import { FC, useState } from 'react';
+import {
+  Grid,
+  GridColumn,
+  GridDataStateChangeEvent
+} from '@progress/kendo-react-grid';
+import { State, toODataString } from '@progress/kendo-data-query';
 
-const API_ROOT = 'https://api.punkapi.com/v2/beers';
+import { AvgFilterCell } from './AvgFilterCell';
+import { ImgCell } from './ImgCell';
+import { useBeersList } from '../hooks/useBeersList';
 
-const Image = ({ src }: any) => {
-  return (
-    <td>
-      <img src={src} alt="a beer" width={50} />
-    </td>
-  );
-};
-
-export const Home = () => {
-  const { isSuccess, data } = useQuery({
-    queryKey: ['beers'],
-    queryFn: async () => {
-      const response = await fetch(API_ROOT);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }
+export const Home: FC = (): JSX.Element => {
+  const [page, setPage] = useState<number>(1);
+  const [abv, setAbv] = useState<number>(0);
+  const [dataState, setDataState] = useState<State>({
+    take: 25,
+    skip: 0
   });
 
-  if (isSuccess) {
-    console.log(data);
-  }
+  const { beers, isLoading } = useBeersList(page, abv);
+
+  const dataStateChange = (e: GridDataStateChangeEvent) => {
+    const nextPage = e.dataState.skip! / 25 + 1;
+    if (toODataString(e.dataState) !== toODataString(dataState)) {
+      setDataState(e.dataState);
+      setPage(nextPage);
+    }
+  };
+
+  const filterChange = (event: any) => {
+    setAbv(event.filter.filters[0].value);
+    setPage(1);
+  };
+  console.log(beers);
+
   return (
-    <Grid
-      style={{
-        height: '50vh'
-      }}
-      data={data}
-    >
-      <GridColumn field="name" title="Name" width="350px" />
-      <GridColumn
-        field="image_url"
-        title="Image"
-        cell={({ dataItem }) => <Image src={dataItem.image_url} />}
-      />
-      <GridColumn field="abv" title="Abv" />
-    </Grid>
+    <div style={{ padding: 80 }}>
+      <>
+        {isLoading && (
+          <div className="k-loading-mask">
+            <span className="k-loading-text">Loading</span>
+            <div className="k-loading-image" />
+            <div className="k-loading-color" />
+          </div>
+        )}
+        <Grid
+          style={{
+            height: '80vh'
+          }}
+          data={{
+            data: beers,
+            total: beers.length < 25 ? 25 * page : 25 * page + 1
+          }}
+          pageable
+          filterable
+          {...dataState}
+          onDataStateChange={dataStateChange}
+          onFilterChange={filterChange}
+        >
+          <GridColumn field="id" title="Id" filterable={false} width={50} />
+          <GridColumn
+            field="image_url"
+            title="Image"
+            cell={({ dataItem }) => <ImgCell src={dataItem.image_url} />}
+            filterable={false}
+          />
+          <GridColumn field="name" title="Name" filterable={false} />
+          <GridColumn
+            field="abv"
+            title="Abv %"
+            filterCell={AvgFilterCell}
+            filter="numeric"
+          />
+        </Grid>
+      </>
+    </div>
   );
 };
