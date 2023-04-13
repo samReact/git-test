@@ -1,44 +1,19 @@
-import { FC, useState } from 'react';
-import axios from 'axios';
-
+import { FC } from 'react';
 import { Form, Field, FormElement } from '@progress/kendo-react-form';
 import { Label } from '@progress/kendo-react-labels';
 import { Button } from '@progress/kendo-react-buttons';
 import { TextArea } from '@progress/kendo-react-inputs';
+import { Loader } from '@progress/kendo-react-indicators';
 
-const GPT_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
+import { useChatGpt } from '../hooks/useChatGpt';
 
 const ChatGpt: FC = (): JSX.Element => {
-  const [completedSentence, setCompletedSentence] = useState<string>('');
-
-  const fetchData = async (input: string) => {
-    const response = await axios.post(
-      'https://api.openai.com/v1/completions',
-      {
-        prompt: `Complete this sentence: "${input}"`,
-        model: 'text-davinci-002',
-        max_tokens: 50,
-        n: 1,
-        stop: '.'
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${GPT_API_KEY}`
-        }
-      }
-    );
-
-    return response.data.choices[0].text;
-  };
+  const { data, isFetching, setInput, isPreviousData } = useChatGpt();
 
   async function handleClick(values: { [name: string]: string }) {
     const { comments } = values;
-    try {
-      const completedSentence = await fetchData(comments);
-      setCompletedSentence(completedSentence);
-    } catch (error) {
-      console.error(error);
+    if (comments.length > 0 && !isPreviousData) {
+      setInput(comments);
     }
   }
 
@@ -74,7 +49,18 @@ const ChatGpt: FC = (): JSX.Element => {
           </FormElement>
         )}
       />
-      {completedSentence && <p>{completedSentence}</p>}
+      {isFetching ? (
+        <div
+          className="row"
+          style={{
+            marginTop: 10
+          }}
+        >
+          <Loader size="small" type={'infinite-spinner'} />
+        </div>
+      ) : (
+        <p>{data}</p>
+      )}
     </div>
   );
 };
