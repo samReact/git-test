@@ -6,8 +6,8 @@ import {
 } from '@progress/kendo-react-grid';
 import { State, toODataString } from '@progress/kendo-data-query';
 
-import { AvgFilterCell } from './AvgFilterCell';
-import { ImgCell } from './ImgCell';
+import { AvgFilterCell } from '../components/AvgFilterCell';
+import { ImgCell } from '../components/ImgCell';
 import { useBeersList } from '../hooks/useBeersList';
 
 export const Home: FC = (): JSX.Element => {

@@ -2,12 +2,12 @@ import { FC } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Route, Routes } from 'react-router-dom';
 
-import { Home } from './components/Home';
-import { AppBar } from './components/AppBar';
-
 import './styles/App.scss';
-import { MemberShip } from './components/MemberShip';
-import ChatGpt from './components/ChatGpt';
+
+import { AppBar } from './components/AppBar';
+import { Home } from './pages/Home';
+import { MemberShip } from './pages/MemberShip';
+import ChatGpt from './pages/ChatGpt';
 
 const queryClient = new QueryClient();
 
