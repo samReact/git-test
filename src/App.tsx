@@ -7,6 +7,7 @@ import { AppBar } from './components/AppBar';
 
 import './styles/App.scss';
 import { MemberShip } from './components/MemberShip';
+import ChatGpt from './components/ChatGpt';
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App: FC = (): JSX.Element => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/part2" element={<MemberShip />} />
+        <Route path="/chat" element={<ChatGpt />} />
       </Routes>
     </QueryClientProvider>
   );

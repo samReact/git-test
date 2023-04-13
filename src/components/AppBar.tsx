@@ -16,7 +16,12 @@ export const AppBar: FC = (): JSX.Element => {
   return (
     <AppBarComponent className="appBar">
       <AppBarSection>
-        <h3 className="title">Git's beers</h3>
+        <img src="/cheers.png" alt="beer logo" width={50} />
+      </AppBarSection>
+      <AppBarSection>
+        <h3 onClick={() => navigate('/')} className="title">
+          Git's beers
+        </h3>
       </AppBarSection>
       <AppBarSection>
         <Menu onSelect={onSelect}>
@@ -30,6 +35,12 @@ export const AppBar: FC = (): JSX.Element => {
             text="Part2"
             data={{
               route: '/part2'
+            }}
+          />
+          <MenuItem
+            text="Let's Chat"
+            data={{
+              route: '/chat'
             }}
           />
         </Menu>
