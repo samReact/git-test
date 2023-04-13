@@ -1,10 +1,10 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { Button } from '@progress/kendo-react-buttons';
 import { GridFilterCellProps } from '@progress/kendo-react-grid';
 
 export const AvgFilterCell = (props: GridFilterCellProps) => {
   const { onChange } = props;
-  const [selected, setSelected] = React.useState(false);
+  const [selected, setSelected] = useState(false);
 
   const handleClick = (e: React.SyntheticEvent) => {
     onChange({

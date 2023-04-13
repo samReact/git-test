@@ -32,10 +32,9 @@ export const Home: FC = (): JSX.Element => {
     setAbv(event.filter.filters[0].value);
     setPage(1);
   };
-  console.log(beers);
 
   return (
-    <div style={{ padding: 80 }}>
+    <div className="container">
       <>
         {isLoading && (
           <div className="k-loading-mask">

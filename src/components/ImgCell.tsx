@@ -1,6 +1,6 @@
-type Props = {
+interface Props {
   src: string;
-};
+}
 
 export const ImgCell = (props: Props) => {
   const { src } = props;
