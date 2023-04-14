@@ -38,6 +38,7 @@ export const Home: FC = (): JSX.Element => {
       {isLoading ? (
         <div
           className="row"
+          data-testid="loader"
           style={{
             width: '50%'
           }}

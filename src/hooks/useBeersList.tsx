@@ -14,7 +14,7 @@ export const useBeersList = () => {
     return datas;
   }, []);
 
-  const { isLoading, data, isFetching, isPreviousData } = useQuery({
+  const { isLoading, data, isFetching, isPreviousData, isSuccess } = useQuery({
     queryKey: ['projects', page, abv],
     queryFn: () => fetchBeers(page, abv),
     keepPreviousData: true
@@ -28,6 +28,7 @@ export const useBeersList = () => {
     abv,
     setPage,
     setAbv,
-    isPreviousData
+    isPreviousData,
+    isSuccess
   };
 };
